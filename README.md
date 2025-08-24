@@ -1,29 +1,34 @@
-# Create T3 App
+# Project Overview
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+## 🚀 Technologies Used
+- **Frontend**: [Next.js (React)](https://nextjs.org/)
+- **Styling**: [TailwindCSS](https://tailwindcss.com/)
+- **Backend API**: [Node.js](https://nodejs.org/)
+- **AI Integration**: [Ollama](https://ollama.ai/)
+- **Containerization**: [Docker](https://www.docker.com/)
 
-## What's next? How do I make an app with this?
+---
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+## 🏗️ Architecture & Hosting
+The project is hosted on a **Virtual Private Server (VPS)** and runs fully in **Docker containers**.  
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+- **Frontend** → Runs in its own container (Next.js + TailwindCSS).  
+- **Backend API** → Runs in a separate Node.js container.  
+- **Ollama Instance** → Runs as a container within the same network.  
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+All containers communicate with each other through an isolated **Docker network**, simulating a **microservices architecture**.
 
-## Learn More
+---
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+## 🎯 Purpose of the Project
+The project was built with two main goals:  
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+1. **Practical Deployment** – Hosting an AI-enabled web application using containerized services on a VPS.  
+2. **Learning Experience** – Gaining hands-on knowledge with Docker, especially in managing communication between multiple containers acting as microservices.  
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+---
 
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+## 🔧 Key Takeaways
+- Learned to set up and manage a **multi-container Docker environment**.  
+- Gained experience in **frontend-backend communication via Docker networks**.  
+- Tested **Ollama integration** within a microservices setup.  
