@@ -25,9 +25,9 @@ export async function POST(req: Request) {
 
     let response: Response;
     try {
-      const ollamaHost = process.env.OLLAMA_HOST ?? "ragxollama";
-      const ollamaPort = process.env.OLLAMA_PORT ?? "3001";
-      const ollamaModel = process.env.OLLAMA_MODEL ?? "llama3.2:1b";
+      const ollamaHost = process.env.OLLAMA_HOST;
+      const ollamaPort = process.env.OLLAMA_PORT;
+      const ollamaModel = process.env.OLLAMA_MODEL;
 
       response = await fetch(`http://${ollamaHost}:${ollamaPort}/chat`, {
         method: "POST",
