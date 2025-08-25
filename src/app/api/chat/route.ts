@@ -26,10 +26,9 @@ export async function POST(req: Request) {
     let response: Response;
     try {
       const ollamaHost = process.env.OLLAMA_HOST;
-      const ollamaPort = process.env.OLLAMA_PORT;
       const ollamaModel = process.env.OLLAMA_MODEL;
 
-      response = await fetch(`http://${ollamaHost}:${ollamaPort}/chat`, {
+      response = await fetch(`https://${ollamaHost}/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
