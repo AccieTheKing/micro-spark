@@ -19,18 +19,42 @@ export async function POST(req: Request) {
     console.log("Received query:", query);
 
     // Call your backend Node.js API
-    const response = await fetch("http://localhost:3001/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: query,
-      }),
-    });
+    const controller = new AbortController();
+    const timeoutMs = parseInt(process.env.API_TIMEOUT ?? "60000");
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-    if (!response.ok) {
-      throw new Error(`Backend API error: ${response.status}`);
+    let response: Response;
+    try {
+      const ollamaHost = process.env.OLLAMA_HOST ?? "ragxollama";
+      const ollamaPort = process.env.OLLAMA_PORT ?? "3001";
+      const ollamaModel = process.env.OLLAMA_MODEL ?? "llama3.2:1b";
+
+      response = await fetch(`http://${ollamaHost}:${ollamaPort}/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: query,
+          model: ollamaModel, // Specify the model to use
+        }),
+        signal: controller.signal,
+        keepalive: true,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(`Backend API error: ${response.status}`);
+      }
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error instanceof Error && error.name === "AbortError") {
+        throw new Error(
+          "Request timeout: Backend API took too long to respond",
+        );
+      }
+      throw error;
     }
 
     const backendResponse = (await response.json()) as Record<string, unknown>;
