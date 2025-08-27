@@ -57,6 +57,7 @@ export default function ChatPage() {
   };
 
   const handleSubmit = async () => {
+    console.log("=== FORM SUBMISSION STARTED ===");
     setIsLoading(true);
     setChatResponse("");
     setIsChatStarted(true);
@@ -65,6 +66,9 @@ export default function ChatPage() {
       const userMessage = `${Object.entries(selectedOptions)
         .map(([step, option]) => `Step ${step}: ${option}`)
         .join("\n")} Additional Information: ${textInput}`;
+
+      console.log("User message:", userMessage);
+      console.log("Calling /api/chat...");
 
       const response = await fetch("/api/chat", {
         method: "POST",
@@ -75,6 +79,9 @@ export default function ChatPage() {
           query: userMessage,
         }),
       });
+
+      console.log("Response received:", response);
+      console.log("Response status:", response.status);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

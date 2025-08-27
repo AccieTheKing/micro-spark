@@ -2,11 +2,17 @@
 export const runtime = "edge";
 
 export async function POST(req: Request) {
+  console.log("=== CHAT API CALLED ===");
+
   try {
     const body = (await req.json()) as unknown;
+    console.log("Request body:", body);
+
     const { query } = body as { query: string };
+    console.log("Extracted query:", query);
 
     if (!query) {
+      console.log("No query provided, returning 400");
       return new Response(
         JSON.stringify({ error: "Query field is required" }),
         {
@@ -16,61 +22,77 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log("Received query:", query);
+    console.log("=== ENVIRONMENT VARIABLES ===");
+    console.log("OLLAMA_HOST:", process.env.OLLAMA_HOST);
+    console.log("OLLAMA_MODEL:", process.env.OLLAMA_MODEL);
+    console.log("NODE_ENV:", process.env.NODE_ENV);
 
     // Call your backend Node.js API
-    const controller = new AbortController();
-    const timeoutMs = parseInt(process.env.API_TIMEOUT ?? "60000");
-    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    const ollamaHost = process.env.OLLAMA_HOST;
+    const ollamaPort = process.env.OLLAMA_PORT;
+    const ollamaModel = process.env.OLLAMA_MODEL;
 
-    let response: Response;
+    console.log("Using ollamaHost:", ollamaHost);
+    console.log("Using ollamaPort:", ollamaPort);
+    console.log("Using ollamaModel:", ollamaModel);
+
+    const url = `http://${ollamaHost}:${ollamaPort}/chat`;
+
+    console.log("Calling URL:", url);
+
     try {
-      const ollamaHost = process.env.OLLAMA_HOST;
-      const ollamaModel = process.env.OLLAMA_MODEL;
-
-      response = await fetch(`https://${ollamaHost}/chat`, {
+      const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           query: query,
-          model: ollamaModel, // Specify the model to use
+          model: ollamaModel,
         }),
-        signal: controller.signal,
-        keepalive: true,
       });
 
-      clearTimeout(timeoutId);
+      console.log("Response status:", response.status);
+      console.log("Response ok:", response.ok);
 
       if (!response.ok) {
-        throw new Error(`Backend API error: ${response.status}`);
+        const errorText = await response.text();
+        console.log("Error response body:", errorText);
+        throw new Error(`Backend API error: ${response.status} - ${errorText}`);
       }
-    } catch (error) {
-      clearTimeout(timeoutId);
-      if (error instanceof Error && error.name === "AbortError") {
-        throw new Error(
-          "Request timeout: Backend API took too long to respond",
-        );
-      }
-      throw error;
+
+      const backendResponse = (await response.json()) as Record<
+        string,
+        unknown
+      >;
+      console.log("Backend response:", backendResponse);
+
+      // Return the response from your backend
+      return new Response(JSON.stringify(backendResponse), {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "no-cache",
+        },
+      });
+    } catch (fetchError) {
+      console.error("Fetch error:", fetchError);
+      throw fetchError;
     }
-
-    const backendResponse = (await response.json()) as Record<string, unknown>;
-    console.log("Backend response:", backendResponse);
-
-    // Return the response from your backend
-    return new Response(JSON.stringify(backendResponse), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Cache-Control": "no-cache",
-      },
-    });
   } catch (error) {
-    console.error("Chat API error:", error);
+    console.error("=== CHAT API ERROR ===");
+    console.error("Error type:", typeof error);
+    console.error(
+      "Error message:",
+      error instanceof Error ? error.message : String(error),
+    );
+    console.error("Full error:", error);
+
     return new Response(
-      JSON.stringify({ error: "Failed to process chat request" }),
+      JSON.stringify({
+        error: "Failed to process chat request",
+        details: error instanceof Error ? error.message : String(error),
+      }),
       {
         status: 500,
         headers: { "Content-Type": "application/json" },

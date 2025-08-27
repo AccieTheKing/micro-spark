@@ -17,6 +17,10 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
+    OLLAMA_HOST: z.string().default("localhost:11434"),
+    OLLAMA_PORT: z.string().default("11434"),
+    OLLAMA_MODEL: z.string().default("llama3.2:latest"),
+    API_TIMEOUT: z.string().default("60000"),
   },
 
   /**
@@ -38,6 +42,10 @@ export const env = createEnv({
     AUTH_DISCORD_SECRET: process.env.AUTH_DISCORD_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
+    OLLAMA_HOST: process.env.OLLAMA_HOST,
+    OLLAMA_PORT: process.env.OLLAMA_PORT,
+    OLLAMA_MODEL: process.env.OLLAMA_MODEL,
+    API_TIMEOUT: process.env.API_TIMEOUT,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

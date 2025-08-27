@@ -7,9 +7,7 @@ import "./src/env.js";
 /** @type {import("next").NextConfig} */
 const config = {
   // Configure the port for Docker container compatibility
-  experimental: {
-    serverComponentsExternalPackages: [],
-  },
+  serverExternalPackages: [],
 };
 
 export default config;
