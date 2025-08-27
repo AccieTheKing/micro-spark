@@ -2,14 +2,10 @@
 export const runtime = "edge";
 
 export async function POST(req: Request) {
-  console.log("=== CHAT API CALLED ===");
-
   try {
     const body = (await req.json()) as unknown;
-    console.log("Request body:", body);
 
     const { query } = body as { query: string };
-    console.log("Extracted query:", query);
 
     if (!query) {
       console.log("No query provided, returning 400");
@@ -22,21 +18,11 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log("=== ENVIRONMENT VARIABLES ===");
-    console.log("OLLAMA_HOST:", process.env.OLLAMA_HOST);
-    console.log("OLLAMA_MODEL:", process.env.OLLAMA_MODEL);
-    console.log("NODE_ENV:", process.env.NODE_ENV);
-
     // Call your backend Node.js API
     const ollamaHost = process.env.OLLAMA_HOST;
-    const ollamaPort = process.env.OLLAMA_PORT;
     const ollamaModel = process.env.OLLAMA_MODEL;
 
-    console.log("Using ollamaHost:", ollamaHost);
-    console.log("Using ollamaPort:", ollamaPort);
-    console.log("Using ollamaModel:", ollamaModel);
-
-    const url = `http://${ollamaHost}:${ollamaPort}/chat`;
+    const url = `${ollamaHost}`;
 
     console.log("Calling URL:", url);
 
