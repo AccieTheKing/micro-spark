@@ -4,7 +4,7 @@ set -e
 cd ~/projects/micro-spark
 
 echo "Pulling latest code..."
-git pull origin main
+git pull origin master
 
 echo "Stop current container"
 docker compose down
