@@ -1,0 +1,30 @@
+name: Deploy micro-spark
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 🔍 Debug step to check if your SSH private key is passed correctly
+      - name: Debug SSH key
+        run: |
+          echo "${{ secrets.VPS_HOST }}"
+          echo "${{ secrets.VPS_USER }}"
+          echo "${{ secrets.VPS_SSH_KEY }}"
+
+      - name: SSH and deploy micro-spark
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd ~/projects/micro-spark
+            ./deploy.sh
