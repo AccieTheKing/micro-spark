@@ -11,9 +11,7 @@ const LandingPage = () => {
         <div className="container mx-auto flex items-center justify-between px-4 py-4">
           <div className="flex items-center gap-2">
             <Sparkles className="text-primary h-6 w-6" />
-            <h1 className="text-foreground text-xl font-bold">
-              Micro Spark test
-            </h1>
+            <h1 className="text-foreground text-xl font-bold">Micro Spark</h1>
           </div>
         </div>
       </header>

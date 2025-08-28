@@ -64,4 +64,6 @@ export const authConfig = {
       },
     }),
   },
+  // Trust localhost and Docker internal hosts
+  trustHost: true,
 } satisfies NextAuthConfig;
